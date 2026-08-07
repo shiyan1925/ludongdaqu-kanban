@@ -6,6 +6,7 @@
 <title>鲁东大区订销数据看板 · 经销商端</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <style>
+.note { background:#FFF1F2; border:1px solid var(--bd); color:var(--txt); padding:8px 10px; border-radius:8px; font-size:12px; margin:8px 0; }
 :root { --p:#C8102E; --p2:#8F0E22; --s:#E8483A; --a:#D9A441; --bg:#FDF6F5; --bd:#F0C9CD; --red:#C8102E; --green:#15803D; --txt:#5B0F1C; }
 * { box-sizing:border-box; margin:0; padding:0; }
 body { font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif; background:var(--bg); color:#1E3A8A; padding:12px; }
@@ -48,6 +49,7 @@ tr:nth-child(even) td { background:#F5F8FD; }
 <body>
 <div id="mask" class="mask"><div class="box"><h2>鲁东大区订销数据看板 · 经销商端</h2><p class="sub">请输入访问密码后查看</p><input type="password" id="pwd" placeholder="访问密码"><button onclick="unlock()">进入</button><p id="perr" class="err"></p></div></div>
 <div class="head"><h1>鲁东大区订销数据看板 · 经销商端</h1><p class="sub">数据截至 <span id="asof"></span></p></div>
+
 <div id="nav"><button class="nav" data-v="总览">总览</button><button class="nav" data-v="订单">订单</button><button class="nav" data-v="销量">销量</button><button class="nav" data-v="大唐">大唐</button></div>
 <div class="card" id="filters">
   <h3>筛选条件</h3>
