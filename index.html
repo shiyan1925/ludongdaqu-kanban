@@ -35,19 +35,28 @@ th { background:var(--p); color:#fff; }
 tr:nth-child(even) td { background:#F5F8FD; }
 .table-wrap { overflow-x:auto; }
 .mask { position:fixed; inset:0; z-index:99; overflow:hidden; display:flex; align-items:center; justify-content:center;
-  background:radial-gradient(1100px 600px at 20% -10%,rgba(217,164,65,.16),transparent 62%),
-             radial-gradient(1200px 620px at 85% 112%,rgba(224,75,90,.30),transparent 62%),
-             radial-gradient(900px 520px at 55% 55%,rgba(130,25,40,.18),transparent 68%),
-             linear-gradient(165deg,#3B0A0E 0%,#3A0508 38%,#22040A 70%,#050102 100%); }
-.glow { position:absolute; border-radius:50%; filter:blur(90px); opacity:.24; pointer-events:none; }
+  background:radial-gradient(1100px 600px at 20% -10%,rgba(217,164,65,.13),transparent 62%),
+             radial-gradient(1200px 620px at 85% 112%,rgba(224,75,90,.24),transparent 62%),
+             radial-gradient(900px 520px at 55% 55%,rgba(130,25,40,.15),transparent 68%),
+             linear-gradient(165deg,#3B0A0E 0%,#38050B 32%,#16030A 56%,#050102 100%); }
+.mask::after { content:""; position:absolute; inset:0; opacity:.05; pointer-events:none; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='140' height='140' filter='url(%23n)'/></svg>"); }
+.glow { position:absolute; border-radius:50%; filter:blur(90px); opacity:.22; pointer-events:none; }
 .glow.g1 { left:6%; top:-12%; width:380px; height:380px; background:#D9A441; }
 .glow.g2 { right:4%; bottom:-10%; width:420px; height:420px; background:#E8483A; }
-.mask .box { position:relative; z-index:3; width:min(348px,88vw); border-radius:26px; padding:30px 24px 22px; text-align:center;
-  background:rgba(255,255,255,.86); backdrop-filter:blur(22px) saturate(1.3); -webkit-backdrop-filter:blur(22px) saturate(1.3);
-  border:1px solid rgba(217,164,65,.5); box-shadow:0 30px 70px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.7);
+.mask .box { position:relative; z-index:3; width:min(348px,88vw); border-radius:26px; padding:34px 26px 26px; text-align:center;
+  background:linear-gradient(180deg,#FFFDF8,#FFF6EC) padding-box,
+             linear-gradient(160deg,#E8C68A,#D9A441 45%,#C8102E) border-box;
+  border:1.5px solid transparent; backdrop-filter:blur(24px) saturate(1.3); -webkit-backdrop-filter:blur(24px) saturate(1.3);
+  box-shadow:0 34px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.85);
   animation:cardIn .5s cubic-bezier(.22,.61,.36,1); }
+.mask .box::before { content:""; position:absolute; top:0; left:16%; right:16%; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(217,164,65,.85),transparent); }
+.divider { width:46px; height:2px; margin:8px auto 12px; border-radius:2px; background:linear-gradient(90deg,#D9A441,#C8102E); }
 @keyframes cardIn { from { opacity:0; transform:translateY(18px) scale(.98); } to { opacity:1; transform:none; } }
-.mask .box h2 { font-family:"Songti SC","STSong","SimSun",serif; font-size:clamp(17px,4.6vw,21px); font-weight:700; color:#5C0713; letter-spacing:1px; white-space:nowrap; margin-bottom:6px; }
+.mask .box h2 { font-family:"Songti SC","STSong","SimSun",serif; font-size:clamp(18px,4.8vw,22px); font-weight:700; text-align:center;
+  letter-spacing:2px; text-indent:2px; white-space:nowrap; margin:4px 0 0;
+  background:linear-gradient(135deg,#7A0A16,#C8102E 75%); -webkit-background-clip:text; background-clip:text; color:transparent; }
 .mask .box .sub { text-align:center; color:#8a8a8a; font-size:12px; margin-bottom:14px; line-height:1.7; }
 .mask input { width:100%; padding:13px 15px; font-size:15px; border:1.5px solid #EAD7B0; border-radius:13px; outline:none; background:#FFFDF7; transition:border-color .25s,box-shadow .25s; }
 .mask input:focus { border-color:#C8102E; box-shadow:0 0 0 4px rgba(200,16,46,.12); }
@@ -59,14 +68,14 @@ tr:nth-child(even) td { background:#F5F8FD; }
 .frow { display:flex; flex-wrap:wrap; gap:8px; }
 .frow select { flex:1; min-width:120px; padding:8px; border:1px solid var(--bd); border-radius:8px; font-size:14px; }
 /* 登录动画：大唐车（真车图） */
-#car { position:absolute; bottom:6%; left:0; width:240px; z-index:2; display:none; transform:translateX(110vw); will-change:transform; pointer-events:none; }
+#car { position:absolute; bottom:6%; left:0; width:200px; z-index:2; display:none; transform:translateX(110vw); will-change:transform; pointer-events:none; }
 #car img { width:100%; display:block; }
 @media (prefers-reduced-motion:reduce) { .mask .box { animation:none; } }
 .red { color:var(--red); } .green { color:var(--green); }
 </style>
 </head>
 <body>
-<div id="mask" class="mask"><div class="glow g1"></div><div class="glow g2"></div><div id="car"><img src="car.png" alt=""></div><div class="box"><h2>鲁东大区订销数据看板 · 经销商端</h2><p class="sub">请输入访问密码后查看数据</p><input type="password" id="pwd" placeholder="访问密码"><button onclick="unlock()">进入</button><p id="perr" class="err"></p><p class="hint">连续 1 小时无操作将自动锁定</p></div></div>
+<div id="mask" class="mask"><div class="glow g1"></div><div class="glow g2"></div><div id="car"><img src="car.png" alt=""></div><div class="box"><h2>鲁东大区订销数据看板 · 经销商端</h2><div class="divider"></div><p class="sub">请输入访问密码后查看数据</p><input type="password" id="pwd" placeholder="访问密码"><button onclick="unlock()">进入</button><p id="perr" class="err"></p><p class="hint">连续 1 小时无操作将自动锁定</p></div></div>
 <div class="head"><h1>鲁东大区订销数据看板 · 经销商端</h1><p class="sub">数据截至 <span id="asof"></span></p></div>
 
 <div id="nav"><button class="nav" data-v="总览">总览</button><button class="nav" data-v="订单">订单</button><button class="nav" data-v="销量">销量</button><button class="nav" data-v="大唐">大唐</button></div>
@@ -114,7 +123,7 @@ function unlock() {
     car.style.display = "block";
     requestAnimationFrame(() => {
       car.style.transition = "transform 1.2s cubic-bezier(.22,.61,.36,1)";
-      car.style.transform = "translateX(calc(50vw - 120px))";   // 停在中间
+      car.style.transform = "translateX(calc(50vw - 100px))";   // 停在中间
     });
     setTimeout(() => { car.style.transition = "transform 0.9s ease-in"; car.style.transform = "translateX(-110vw)"; }, 1800);
     setTimeout(() => {
