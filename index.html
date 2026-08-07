@@ -55,7 +55,7 @@ tr:nth-child(even) td { background:#F5F8FD; }
 .divider { width:46px; height:2px; margin:8px auto 12px; border-radius:2px; background:linear-gradient(90deg,#D9A441,#C8102E); }
 @keyframes cardIn { from { opacity:0; transform:translateY(18px) scale(.98); } to { opacity:1; transform:none; } }
 .mask .box h2 { font-family:"Songti SC","STSong","SimSun",serif; font-size:clamp(18px,4.8vw,22px); font-weight:700; text-align:center;
-  letter-spacing:2px; text-indent:2px; white-space:nowrap; margin:4px 0 0;
+  letter-spacing:1px; white-space:nowrap; margin:4px 0 0;
   color:#8F0E22; }
 .mask .box .sub { text-align:center; color:#8a8a8a; font-size:12px; margin-bottom:14px; line-height:1.7; }
 .mask input { width:100%; padding:13px 15px; font-size:15px; border:1.5px solid #EAD7B0; border-radius:13px; outline:none; background:#FFFDF7; transition:border-color .25s,box-shadow .25s; }
@@ -75,7 +75,7 @@ tr:nth-child(even) td { background:#F5F8FD; }
 </style>
 </head>
 <body>
-<div id="mask" class="mask"><div class="glow g1"></div><div class="glow g2"></div><div id="car"><img src="car.png" alt=""></div><div class="box"><h2>鲁东大区订销数据看板 · 经销商端</h2><div class="divider"></div><p class="sub">请输入访问密码后查看数据</p><input type="password" id="pwd" placeholder="访问密码"><button onclick="unlock()">进入</button><p id="perr" class="err"></p><p class="hint">连续 1 小时无操作将自动锁定</p></div></div>
+<div id="mask" class="mask"><div class="glow g1"></div><div class="glow g2"></div><div id="car"><img src="car.png" alt=""></div><div class="box"><h2>鲁东大区订销数据看板</h2><div class="divider"></div><p class="sub">经销商端 · 请输入访问密码后查看数据</p><input type="password" id="pwd" placeholder="访问密码"><button onclick="unlock()">进入</button><p id="perr" class="err"></p><p class="hint">连续 1 小时无操作将自动锁定</p></div></div>
 <div class="head"><h1>鲁东大区订销数据看板 · 经销商端</h1><p class="sub">数据截至 <span id="asof"></span></p></div>
 
 <div id="nav"><button class="nav" data-v="总览">总览</button><button class="nav" data-v="订单">订单</button><button class="nav" data-v="销量">销量</button><button class="nav" data-v="大唐">大唐</button></div>
