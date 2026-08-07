@@ -34,20 +34,38 @@ th,td { border:1px solid var(--bd); padding:5px 6px; text-align:left; white-spac
 th { background:var(--p); color:#fff; }
 tr:nth-child(even) td { background:#F5F8FD; }
 .table-wrap { overflow-x:auto; }
-.mask { position:fixed; inset:0; background:#fff; display:flex; align-items:center; justify-content:center; z-index:99; }
-.mask .box { width:min(340px, 90vw); }
-.mask .box h2 { font-size:16px; white-space:nowrap; text-align:center; }
-.mask .box .sub { text-align:center; white-space:nowrap; }
-.mask input { width:100%; padding:10px; margin:8px 0; border:1px solid var(--bd); border-radius:8px; font-size:15px; }
-.mask button { width:100%; padding:10px; background:var(--p); color:#fff; border:0; border-radius:8px; font-size:15px; cursor:pointer; }
-.err { color:var(--red); font-size:13px; }
+.mask { position:fixed; inset:0; z-index:99; overflow:hidden; display:flex; align-items:center; justify-content:center;
+  background:radial-gradient(900px 480px at 18% -8%,rgba(217,164,65,.20),transparent 55%),
+             radial-gradient(1000px 520px at 105% 112%,rgba(200,16,46,.45),transparent 55%),
+             linear-gradient(155deg,#3B0A0E 0%,#5C0713 42%,#8F0E22 78%,#C8102E 100%); }
+.glow { position:absolute; width:340px; height:340px; border-radius:50%; filter:blur(70px); opacity:.5; pointer-events:none; }
+.glow.g1 { left:-80px; top:-60px; background:#D9A441; }
+.glow.g2 { right:-100px; bottom:-80px; background:#E8483A; }
+.mask .box { position:relative; z-index:3; width:min(348px,88vw); border-radius:26px; padding:30px 24px 22px; text-align:center;
+  background:rgba(255,255,255,.86); backdrop-filter:blur(22px) saturate(1.3); -webkit-backdrop-filter:blur(22px) saturate(1.3);
+  border:1px solid rgba(217,164,65,.5); box-shadow:0 30px 70px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.7);
+  animation:cardIn .5s cubic-bezier(.22,.61,.36,1); }
+@keyframes cardIn { from { opacity:0; transform:translateY(18px) scale(.98); } to { opacity:1; transform:none; } }
+.mask .box h2 { font-family:"Songti SC","STSong","SimSun",serif; font-size:21px; font-weight:700; color:#5C0713; letter-spacing:2px; margin-bottom:6px; }
+.mask .box .sub { text-align:center; color:#8a8a8a; font-size:12px; margin-bottom:14px; line-height:1.7; }
+.mask input { width:100%; padding:13px 15px; font-size:15px; border:1.5px solid #EAD7B0; border-radius:13px; outline:none; background:#FFFDF7; transition:border-color .25s,box-shadow .25s; }
+.mask input:focus { border-color:#C8102E; box-shadow:0 0 0 4px rgba(200,16,46,.12); }
+.mask button { width:100%; padding:13px; font-size:15px; font-weight:600; color:#fff; border:0; border-radius:13px; cursor:pointer;
+  background:linear-gradient(135deg,#E04B5A,#C8102E 55%,#8F0E22); box-shadow:0 12px 26px rgba(160,13,36,.4); transition:transform .18s,box-shadow .18s; }
+.mask button:hover { transform:translateY(-1.5px); box-shadow:0 16px 32px rgba(160,13,36,.5); }
+.mask .hint { font-size:11px; color:#b9a99a; margin-top:12px; letter-spacing:.5px; }
+.err { color:var(--red); font-size:12.5px; height:18px; margin-top:6px; }
 .frow { display:flex; flex-wrap:wrap; gap:8px; }
 .frow select { flex:1; min-width:120px; padding:8px; border:1px solid var(--bd); border-radius:8px; font-size:14px; }
+/* 登录动画：大唐车（真车图） */
+#car { position:absolute; bottom:6%; left:0; width:240px; z-index:2; display:none; transform:translateX(110vw); will-change:transform; pointer-events:none; }
+#car img { width:100%; display:block; filter:drop-shadow(0 14px 14px rgba(0,0,0,.4)); }
+@media (prefers-reduced-motion:reduce) { .mask .box { animation:none; } }
 .red { color:var(--red); } .green { color:var(--green); }
 </style>
 </head>
 <body>
-<div id="mask" class="mask"><div class="box"><h2>鲁东大区订销数据看板 · 经销商端</h2><p class="sub">请输入访问密码后查看</p><input type="password" id="pwd" placeholder="访问密码"><button onclick="unlock()">进入</button><p id="perr" class="err"></p><p class="sub">连续 1 小时无操作将自动锁定，需重新输入密码</p></div></div>
+<div id="mask" class="mask"><div class="glow g1"></div><div class="glow g2"></div><div id="car"><img src="car.png" alt=""></div><div class="box"><h2>鲁东大区订销数据看板 · 经销商端</h2><p class="sub">请输入访问密码后查看数据</p><input type="password" id="pwd" placeholder="访问密码"><button onclick="unlock()">进 入</button><p id="perr" class="err"></p><p class="hint">连续 1 小时无操作将自动锁定</p></div></div>
 <div class="head"><h1>鲁东大区订销数据看板 · 经销商端</h1><p class="sub">数据截至 <span id="asof"></span></p></div>
 
 <div id="nav"><button class="nav" data-v="总览">总览</button><button class="nav" data-v="订单">订单</button><button class="nav" data-v="销量">销量</button><button class="nav" data-v="大唐">大唐</button></div>
@@ -82,11 +100,28 @@ function isFresh() {
 }
 function lock() {
   sessionStorage.removeItem("ok");
-  const m = document.getElementById("mask"); m.style.display = "flex";
+  const m = document.getElementById("mask"); m.style.display = "flex"; m.style.opacity = "";
+  const c = document.getElementById("car"); if (c) { c.style.display = "none"; c.style.transform = "translateX(110vw)"; }
   document.getElementById("pwd").value = ""; document.getElementById("perr").textContent = "";
 }
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 function unlock() {
-  if (document.getElementById("pwd").value === PASSWORD) { touch(); document.getElementById("mask").style.display = "none"; }
+  if (document.getElementById("pwd").value === PASSWORD) {
+    touch();
+    if (REDUCED) { document.getElementById("mask").style.display = "none"; return; }
+    const car = document.getElementById("car");
+    car.style.display = "block";
+    requestAnimationFrame(() => {
+      car.style.transition = "transform 1.2s cubic-bezier(.22,.61,.36,1)";
+      car.style.transform = "translateX(calc(50vw - 120px))";   // 停在中间
+    });
+    setTimeout(() => { car.style.transition = "transform 0.9s ease-in"; car.style.transform = "translateX(-110vw)"; }, 1800);
+    setTimeout(() => {
+      const m = document.getElementById("mask");
+      m.style.transition = "opacity .3s"; m.style.opacity = "0";
+      setTimeout(() => { m.style.display = "none"; m.style.opacity = ""; }, 300);
+    }, 2700);
+  }
   else document.getElementById("perr").textContent = "密码错误";
 }
 // 任意操作刷新"最近活动时间"
