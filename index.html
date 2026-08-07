@@ -26,6 +26,11 @@ h1 { font-size:20px; }
 .kpi .t { font-size:12px; color:#6B7280; }
 .kpi .v { font-size:20px; font-weight:700; margin-top:2px; color:var(--p); }
 .kpi .d { font-size:11px; color:#9CA3AF; }
+.kpi .v.green { color:#15803D; }
+.kpi .v.red { color:#C8102E; }
+.kpi .d.green { color:#15803D; }
+td.neg { color:#15803D; font-weight:600; }
+td.pos { color:#C8102E; font-weight:600; }
 .card { background:#fff; border:1px solid var(--bd); border-radius:10px; padding:10px; margin-bottom:10px; }
 .card h3 { font-size:15px; margin-bottom:6px; }
 .chart { width:100%; height:300px; }
@@ -157,19 +162,20 @@ function activeEntity() {
 }
 let trendChart = null, groupChart = null, seriesChartS = null, seriesChartO = null;
 function vc(x) { return (x !== null && x !== undefined) ? (x < 0 ? "green" : "red") : ""; }
+function dvc(x) { return (x !== null && x !== undefined && x < 0) ? "green" : ""; }
 function renderKpis() {
   const a = DATA.agg[activeEntity()] || DATA.agg["鲁东大区"];
   const kpis = [
-    ["本月销量", a.sales_m, "订交比 " + (a.ratio ?? "—"), ""],
-    ["本月销量环比", fmt(a.sales_mq, true), "较上月同期", vc(a.sales_mq)],
-    ["本月订单", a.orders_m, "订单环比 " + fmt(a.orders_mq, true), ""],
-    ["本周销量", a.sales_w, "本周订单 " + a.orders_w, ""],
-    ["本周销量环比", fmt(a.sales_wq, true), "较上周同期", vc(a.sales_wq)],
-    ["本周订单", a.orders_w, "订单环比(周) " + fmt(a.orders_wq, true), ""],
-    ["大唐EV已订", a.da_done, "目标 " + a.da_goal, ""],
-    ["大唐完成率", fmt(a.da_rate), "差额 " + a.da_diff, ""],
+    ["本月销量", a.sales_m, "订交比 " + (a.ratio ?? "—"), "", ""],
+    ["本月销量环比", fmt(a.sales_mq, true), "较上月同期", vc(a.sales_mq), dvc(a.sales_mq)],
+    ["本月订单", a.orders_m, "订单环比 " + fmt(a.orders_mq, true), "", dvc(a.orders_mq)],
+    ["本周销量", a.sales_w, "本周订单 " + a.orders_w, "", ""],
+    ["本周销量环比", fmt(a.sales_wq, true), "较上周同期", vc(a.sales_wq), dvc(a.sales_wq)],
+    ["本周订单", a.orders_w, "订单环比(周) " + fmt(a.orders_wq, true), "", dvc(a.orders_wq)],
+    ["大唐EV已订", a.da_done, "目标 " + a.da_goal, "", ""],
+    ["大唐完成率", fmt(a.da_rate), "差额 " + a.da_diff, "", dvc(a.da_diff)],
   ];
-  const box = k => `<div class="kpi"><div class="t">${k[0]}</div><div class="v ${k[3]}">${k[1]}</div><div class="d">${k[2]}</div></div>`;
+  const box = k => `<div class="kpi"><div class="t">${k[0]}</div><div class="v ${k[3]}">${k[1]}</div><div class="d ${k[4]}">${k[2]}</div></div>`;
   document.getElementById("kpis").innerHTML =
     kpis.slice(0, 6).map(box).join("") +
     `<div class="wide">${box(kpis[6])}${box(kpis[7])}</div>`;
@@ -217,7 +223,7 @@ function datangTable(dom, data) {
 // 对比表（层级：大区→区域→城市→集团→单店，每层已按本期降序）
 function cmpTable(dom, rows) {
   let h = "<table><tr><th>层级</th><th>名称</th><th>本期</th><th>同期</th><th>环比</th></tr>";
-  h += rows.map(r => `<tr><td>${esc(lv(r))}</td><td>${esc(r["名称"])}</td><td>${r["本期"]}</td><td>${r["同期"]}</td><td>${fmt(r["qoq"], true)}</td></tr>`).join("");
+  h += rows.map(r => `<tr><td>${esc(lv(r))}</td><td>${esc(r["名称"])}</td><td>${r["本期"]}</td><td>${r["同期"]}</td><td class="${r["qoq"] != null ? (r["qoq"] < 0 ? "neg" : "pos") : ""}">${fmt(r["qoq"], true)}</td></tr>`).join("");
   dom.innerHTML = h + "</table>";
 }
 // 筛选状态（按归属）
