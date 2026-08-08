@@ -116,7 +116,7 @@ tr.gray td.rk { color:#9CA3AF; }
     <select id="f-city"><option value="全部">城市（全部）</option></select>
     <select id="f-group"><option value="全部">集团（全部）</option></select>
   </div>
-  <p class="sub">注：KPI、近7日趋势、集团月度订单销量、对比表、大唐进度、车系环比均随筛选联动；车系分布只随城市联动（区域/集团不影响），且只取本月数据。</p>
+  <p class="sub">注：KPI、近7日趋势、集团月度订单销量、对比表、大唐进度随筛选联动；车系销量/订单环比只随区域、城市联动（不随集团）；车系分布只随城市联动，且只取本月数据。</p>
 </div>
 <section id="v-总览" class="view on">
   <div class="kpis" id="kpis"></div>
@@ -419,14 +419,19 @@ function initRanking() {
   }
   renderRanking();
 }
-// ===== 车系销量/订单环比（随筛选联动；周度在前、月度在后）=====
+// ===== 车系销量/订单环比（只随 区域+城市 联动，不随集团；周度在前、月度在后）=====
+function seriesEntity() {
+  if (S.city !== "全部") return S.city;
+  if (S.region !== "全部") return S.region;
+  return "鲁东大区";
+}
 function seriesRankRows(key) {
-  const e = activeEntity();
+  const e = seriesEntity();
   const data = key === "orders" ? (DATA.series_rank_orders || {}) : (DATA.series_rank || {});
   return data[e] || data["鲁东大区"] || [];
 }
 function renderSeriesRank() {
-  const e = activeEntity();
+  const e = seriesEntity();
   const rows = seriesRankRows("sales");
   document.getElementById("t-series-rank-title").textContent = e + " 车系销量环比";
   let h = "<table><tr><th>车系</th><th class='num'>本周销量</th><th class='num'>上周销量</th><th class='num'>本周环比</th><th class='num'>本月销量</th><th class='num'>上月销量</th><th class='num'>本月环比</th></tr>";
@@ -438,7 +443,7 @@ function renderSeriesRank() {
   document.getElementById("t-series-rank").innerHTML = h + "</table>";
 }
 function renderSeriesRankO() {
-  const e = activeEntity();
+  const e = seriesEntity();
   const rows = seriesRankRows("orders");
   document.getElementById("t-series-rank-o-title").textContent = e + " 车系订单环比";
   let h = "<table><tr><th>车系</th><th class='num'>本周订单</th><th class='num'>上周订单</th><th class='num'>本周环比</th><th class='num'>本月订单</th><th class='num'>上月订单</th><th class='num'>本月环比</th></tr>";
