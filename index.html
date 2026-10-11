@@ -162,7 +162,7 @@ function isFresh() {
 function lock() {
   sessionStorage.removeItem("ok");
   const m = document.getElementById("mask"); m.style.display = "flex"; m.style.opacity = "";
-  const c = document.getElementById("car"); if (c) { c.style.display = "none"; c.style.transform = "translateX(110vw)"; }
+  const c = document.getElementById("car"); if (c) { c.style.display = "none"; c.style.transition = ""; c.style.transform = "translateX(110vw)"; }
   document.getElementById("pwd").value = ""; document.getElementById("perr").textContent = "";
 }
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -172,6 +172,7 @@ function unlock() {
     if (REDUCED) { document.getElementById("mask").style.display = "none"; return; }
     const car = document.getElementById("car");
     car.style.display = "block";
+    void car.offsetWidth;   // 强制样式刷新：确保 display:none→block 后过渡一定触发（2026-10-11 修复动画偶发不播）
     requestAnimationFrame(() => {
       car.style.transition = "transform 1.2s cubic-bezier(.22,.61,.36,1)";
       car.style.transform = "translateX(calc(50vw - 100px))";   // 停在中间
